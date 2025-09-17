@@ -1,5 +1,5 @@
-import express, { Request, Response } from 'express';
-import nodemailer from 'nodemailer';
+import express, { Request, Response } from "express";
+import nodemailer from "nodemailer";
 
 // Create Express app
 const app = express();
@@ -7,36 +7,36 @@ app.use(express.json());
 
 // Configure Nodemailer transporter with Gmail SMTP
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  service: "gmail",
   auth: {
-    user: 'engineer.anthony.ng@gmail.com',
-    pass: 'xxtk wakx tkqx ynir',
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASSWORD,
   },
 });
 
 // Health check route
-app.get('/health', (req: Request, res: Response) => {
-  res.status(200).json({ status: 'OK' });
+app.get("/health", (req: Request, res: Response) => {
+  res.status(200).json({ status: "OK" });
 });
 
 // Send email route
-app.post('/send-email', async (req: Request, res: Response) => {
+app.post("/send-email", async (req: Request, res: Response) => {
   const { to, subject, text } = req.body;
 
   if (!to || !subject || !text) {
     return res
       .status(400)
-      .json({ error: 'Missing required fields: to, subject, text' });
+      .json({ error: "Missing required fields: to, subject, text" });
   }
 
   try {
     const info = await transporter.sendMail({
-      from: 'engineer.anthony.ng@gmail.com',
+      from: "engineer.anthony.ng@gmail.com",
       to,
       subject,
       text,
     });
-    res.status(200).json({ message: 'Email sent successfully', info });
+    res.status(200).json({ message: "Email sent successfully", info });
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }
