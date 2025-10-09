@@ -21,18 +21,19 @@ app.get("/health", (req: Request, res: Response) => {
 
 // Send email route
 app.post("/send-email", async (req: Request, res: Response) => {
-  const { to, subject, text } = req.body;
+  console.log("body: ", req.body);
+  const { from, subject, text } = req.body;
 
-  if (!to || !subject || !text) {
+  if (!from || !subject || !text) {
     return res
       .status(400)
-      .json({ error: "Missing required fields: to, subject, text" });
+      .json({ error: "Missing required fields: from, subject, text" });
   }
 
   try {
     const info = await transporter.sendMail({
-      from: "engineer.anthony.ng@gmail.com",
-      to,
+      from,
+      to: "engineer.anthony.ng@gmail.com",
       subject,
       text,
     });
