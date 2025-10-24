@@ -1,5 +1,11 @@
 import express, { Request, Response } from "express";
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+const env = process.env.NODE_ENV || "development";
+
+if (env === "development") {
+  dotenv.config();
+}
 
 // Create Express app
 const app = express();
@@ -20,7 +26,7 @@ app.get("/health", (req: Request, res: Response) => {
 });
 
 // Send email route
-app.post("/send-email", async (req: Request, res: Response) => {
+app.post("/contact-us", async (req: Request, res: Response) => {
   console.log("body: ", req.body);
   const { from, subject, text } = req.body;
 
