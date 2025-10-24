@@ -29,17 +29,18 @@ app.get("/health", (req: Request, res: Response) => {
 app.post("/contact-us", async (req: Request, res: Response) => {
   console.log("body: ", req.body);
   const { from, subject, text } = req.body;
+  const to = process.env.RECIEPIENT;
 
-  if (!from || !subject || !text) {
+  if (!from || !to || !subject || !text) {
     return res
       .status(400)
-      .json({ error: "Missing required fields: from, subject, text" });
+      .json({ error: "Missing required fields: from, to, subject, text" });
   }
 
   try {
     const info = await transporter.sendMail({
       from,
-      to: "engineer.anthony.ng@gmail.com",
+      to,
       subject,
       text,
     });
