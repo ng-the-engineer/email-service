@@ -29,7 +29,7 @@ app.get("/health", (req: Request, res: Response) => {
 app.post("/contact-us", async (req: Request, res: Response) => {
   console.log("body: ", req.body);
   const { from, subject, text } = req.body;
-  const to = process.env.RECIEPIENT;
+  const to = process.env.RECIPIENT;
 
   if (!from || !to || !subject || !text) {
     return res
