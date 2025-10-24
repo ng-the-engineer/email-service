@@ -13,7 +13,7 @@ app.use(express.json());
 
 // Configure Nodemailer transporter with Gmail SMTP
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  service: process.env.PROVIDER,
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASSWORD,
