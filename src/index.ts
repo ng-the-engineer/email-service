@@ -36,6 +36,15 @@ app.post("/contact-us", async (req: Request, res: Response) => {
   } = req.body;
   const to = process.env.RECIPIENT;
 
+  console.log(`from: ${from}`);
+  console.log(`to: ${to}`);
+  console.log(`firstName: ${firstName}`);
+  console.log(`lastName: ${lastName}`);
+  console.log(`subject: ${subject}`);
+  console.log(`message: ${message}`);
+  console.log(`countryCode: ${countryCode}`);
+  console.log(`phoneNumber: ${phoneNumber}`);
+
   if (!from || !to || !firstName || !lastName || !subject || !message) {
     return res.status(400).json({
       error:
