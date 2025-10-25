@@ -20,12 +20,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-type MailParams = {
-  subject: string;
-  text: string;
-  from: string;
-};
-
 app.get("/health", (req: Request, res: Response) => {
   res.status(200).json({ status: "OK" });
 });
