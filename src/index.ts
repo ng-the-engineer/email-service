@@ -1,17 +1,17 @@
 import express, { Request, Response } from "express";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
+import Email from "email-templates";
+
 const env = process.env.NODE_ENV || "development";
 
 if (env === "development") {
   dotenv.config();
 }
 
-// Create Express app
 const app = express();
 app.use(express.json());
 
-// Configure Nodemailer transporter with Gmail SMTP
 const transporter = nodemailer.createTransport({
   service: process.env.PROVIDER,
   auth: {
@@ -20,29 +20,60 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Health check route
+type MailParams = {
+  subject: string;
+  text: string;
+  from: string;
+};
+
 app.get("/health", (req: Request, res: Response) => {
   res.status(200).json({ status: "OK" });
 });
 
-// Send email route
 app.post("/contact-us", async (req: Request, res: Response) => {
-  console.log("body: ", req.body);
-  const { from, subject, text } = req.body;
+  const {
+    from,
+    subject,
+    message,
+    firstName,
+    lastName,
+    countryCode,
+    phoneNumber,
+  } = req.body;
   const to = process.env.RECIPIENT;
 
-  if (!from || !to || !subject || !text) {
-    return res
-      .status(400)
-      .json({ error: "Missing required fields: from, to, subject, text" });
+  if (!from || !to || !firstName || !lastName || !subject || !message) {
+    return res.status(400).json({
+      error:
+        "Missing required fields: from, to, firstName, lastName, subject, message",
+    });
   }
 
   try {
-    const info = await transporter.sendMail({
-      from,
-      to,
-      subject,
-      text,
+    const email = new Email({
+      message: {
+        from,
+        subject,
+      },
+      transport: transporter,
+      views: {
+        options: { extension: "ejs" }, // Or 'hbs' for Handlebars
+      },
+      juice: true, // Enable CSS inlining (set to false if not needed)
+      preview: true, // Enable browser previews in development
+      send: true, // Set to false in development to avoid accidental sends; true for production
+    });
+
+    const info = await email.send({
+      template: "customer-enquiry",
+      message: { to },
+      locals: {
+        firstName,
+        lastName,
+        countryCode: countryCode ?? "N/A",
+        phoneNumber: phoneNumber ?? "N/A",
+        customerMessage: message,
+      },
     });
     res.status(200).json({ message: "Email sent successfully", info });
   } catch (error: any) {
