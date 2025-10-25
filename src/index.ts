@@ -50,15 +50,8 @@ app.post("/contact-us", async (req: Request, res: Response) => {
   console.log("__dirname:", __dirname);
   console.log("process.cwd():", process.cwd());
   console.log(
-    "emails exists:",
-    fs.existsSync(path.resolve(process.cwd(), "emails"))
-  );
-
-  console.log(fs.existsSync(path.join(__dirname, "emails")));
-  console.log("Resolved path:", path.resolve(__dirname, "emails"));
-  console.log(
     "Exists on prod:",
-    fs.existsSync(path.resolve(__dirname, "emails"))
+    fs.existsSync(path.join(__dirname, "emails", "customer-enquiry"))
   );
 
   if (!from || !to || !firstName || !lastName || !subject || !message) {
@@ -84,11 +77,6 @@ app.post("/contact-us", async (req: Request, res: Response) => {
       preview: true, // Enable browser previews in development
       send: true, // Set to false in development to avoid accidental sends; true for production
     });
-
-    console.log("__dirname:", __dirname);
-    console.log(
-      `emails path: ${path.join(__dirname, "emails", "customer-enquiry")}`
-    );
 
     const info = await email.send({
       // template: "customer-enquiry",
