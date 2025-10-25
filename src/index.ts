@@ -85,8 +85,14 @@ app.post("/contact-us", async (req: Request, res: Response) => {
       send: true, // Set to false in development to avoid accidental sends; true for production
     });
 
+    console.log("__dirname:", __dirname);
+    console.log(
+      `emails path: ${path.join(__dirname, "emails", "customer-enquiry")}`
+    );
+
     const info = await email.send({
-      template: "customer-enquiry",
+      // template: "customer-enquiry",
+      template: path.join(__dirname, "emails", "customer-enquiry"),
       message: { to, subject },
       locals: {
         firstName,
