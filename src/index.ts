@@ -48,6 +48,12 @@ app.post("/contact-us", async (req: Request, res: Response) => {
   console.log(`phoneNumber: ${phoneNumber}`);
   console.log(fs.existsSync(path.join(__dirname, "emails")));
 
+  console.log("Resolved path:", path.resolve(__dirname, "emails"));
+  console.log(
+    "Exists on prod:",
+    fs.existsSync(path.resolve(__dirname, "emails"))
+  );
+
   if (!from || !to || !firstName || !lastName || !subject || !message) {
     return res.status(400).json({
       error:
