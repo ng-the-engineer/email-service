@@ -2,6 +2,8 @@ import express, { Request, Response } from "express";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import Email from "email-templates";
+import fs from "fs";
+import path from "path";
 
 const env = process.env.NODE_ENV || "development";
 
@@ -44,6 +46,7 @@ app.post("/contact-us", async (req: Request, res: Response) => {
   console.log(`message: ${message}`);
   console.log(`countryCode: ${countryCode}`);
   console.log(`phoneNumber: ${phoneNumber}`);
+  console.log(fs.existsSync(path.join(__dirname, "emails")));
 
   if (!from || !to || !firstName || !lastName || !subject || !message) {
     return res.status(400).json({
@@ -69,7 +72,7 @@ app.post("/contact-us", async (req: Request, res: Response) => {
 
     const info = await email.send({
       template: "customer-enquiry",
-      message: { to },
+      message: { to, subject },
       locals: {
         firstName,
         lastName,
