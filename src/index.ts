@@ -54,6 +54,13 @@ app.post("/contact-us", async (req: Request, res: Response) => {
     fs.existsSync(path.resolve(__dirname, "emails"))
   );
 
+  console.log("__dirname:", __dirname);
+  console.log("process.cwd():", process.cwd());
+  console.log(
+    "emails exists:",
+    fs.existsSync(path.resolve(process.cwd(), "emails"))
+  );
+
   if (!from || !to || !firstName || !lastName || !subject || !message) {
     return res.status(400).json({
       error:
