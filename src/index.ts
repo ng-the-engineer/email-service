@@ -50,6 +50,9 @@ app.post("/contact-us", async (req: Request, res: Response) => {
   console.log("__dirname:", __dirname);
   console.log("process.cwd():", process.cwd());
   console.log(
+    `emails/customer-enquiry: ${path.join(__dirname, "emails", "customer-enquiry")}`
+  );
+  console.log(
     "Exists on prod:",
     fs.existsSync(path.join(__dirname, "emails", "customer-enquiry"))
   );
