@@ -64,6 +64,8 @@ app.post("/contact-us", async (req: Request, res: Response) => {
       transport: transporter,
       views: {
         options: { extension: "ejs" }, // Or 'hbs' for Handlebars
+        // Use an absolute path to ensure correct resolution in production
+        root: path.resolve(__dirname, "emails"),
       },
       juice: true, // Enable CSS inlining (set to false if not needed)
       preview: true, // Enable browser previews in development
