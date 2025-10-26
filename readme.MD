@@ -29,6 +29,14 @@ Node library `email-templates` is used to preserve HTML and CSS.
 1. `npm run build`
 2. `npm run start`
 
+#### Enable/ disable Preview
+
+In the EmailConfig object, enable `preview: true` allowing you to preview the email in your browser.
+
+#### Enable/ disable Send
+
+In EmailConfig object, make sure `send: true` to send the email to the SMTP provider.
+
 ### Deployment to Vercel
 
 In Vercel project,
@@ -40,3 +48,19 @@ In Vercel project,
 - Build Command: `tsc`
 - Output Directory: `dist`
 - Install Command: `npm install -g typescript && npm install && mkdir -p dist/emails/ && cp -r src/emails/ dist/`
+
+### Testing
+
+```
+curl --location --request POST 'https://{{YOUR_DOMAIN}}/contact-us' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "from": "somebody@someProvider.com",
+    "firstName": "Jane",
+    "lastName": "Ealing",
+    "subject": "Customer Enquiry",
+    "message": "Hey there, I want to understand what minimum quantity to have free delivery? Thanks",
+    "countryCode": "UK",
+    "phoneNumber": "07890123456"
+}'
+```
