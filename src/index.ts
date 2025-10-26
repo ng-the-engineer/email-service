@@ -56,10 +56,10 @@ app.post("/contact-us", async (req: Request, res: Response) => {
   //   `emails/customer-enquiry: ${path.join(__dirname, "emails", "customer-enquiry")}`
   // );
 
-  console.log(
-    "Exists emails customer-enquiry:",
-    fs.existsSync(path.join(__dirname, "emails", "customer-enquiry"))
-  );
+  // console.log(
+  //   "Exists emails customer-enquiry:",
+  //   fs.existsSync(path.join(__dirname, "emails", "customer-enquiry"))
+  // );
 
   if (!from || !to || !firstName || !lastName || !subject || !message) {
     return res.status(400).json({
@@ -88,7 +88,8 @@ app.post("/contact-us", async (req: Request, res: Response) => {
     const info = await email.send({
       // template: "customer-enquiry",
       // template: path.join(__dirname, "emails", "customer-enquiry"),
-      template: path.join(__dirname, "emails"),
+      // template: path.join(__dirname, "emails"),
+      template: path.join(process.cwd(), "emails"), // for Vercel
       message: { to, subject },
       locals: {
         firstName,
