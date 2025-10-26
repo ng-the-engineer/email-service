@@ -38,35 +38,6 @@ app.post("/contact-us", async (req: Request, res: Response) => {
   } = req.body;
   const to = process.env.RECIPIENT;
 
-  console.log(`from: ${from}`);
-  console.log(`to: ${to}`);
-  console.log(`firstName: ${firstName}`);
-  console.log(`lastName: ${lastName}`);
-  console.log(`subject: ${subject}`);
-  console.log(`message: ${message}`);
-  console.log(`countryCode: ${countryCode}`);
-  console.log(`phoneNumber: ${phoneNumber}`);
-
-  console.log("process.cwd():", process.cwd());
-
-  console.log("__dirname:", __dirname);
-
-  console.log("Exists emails:", fs.existsSync(path.join(__dirname, "emails")));
-
-  console.log(
-    "Exist email for Vercel",
-    fs.existsSync(path.join(process.cwd(), "emails"))
-  );
-
-  // console.log(
-  //   `emails/customer-enquiry: ${path.join(__dirname, "emails", "customer-enquiry")}`
-  // );
-
-  // console.log(
-  //   "Exists emails customer-enquiry:",
-  //   fs.existsSync(path.join(__dirname, "emails", "customer-enquiry"))
-  // );
-
   if (!from || !to || !firstName || !lastName || !subject || !message) {
     return res.status(400).json({
       error:
@@ -82,10 +53,8 @@ app.post("/contact-us", async (req: Request, res: Response) => {
       },
       transport: transporter,
       views: {
-        options: { extension: "ejs" }, // Or 'hbs' for Handlebars
-        // Use an absolute path to ensure correct resolution in production
-        // root: path.resolve(__dirname, "emails"),
-        root: path.join(__dirname, "emails"), // for Vercel
+        options: { extension: "ejs" },
+        root: path.join(__dirname, "emails"),
       },
       juice: true, // Enable CSS inlining (set to false if not needed)
       preview: true, // Enable browser previews in development
@@ -93,8 +62,6 @@ app.post("/contact-us", async (req: Request, res: Response) => {
     });
 
     const info = await email.send({
-      // template: "customer-enquiry",
-      // template: path.join(__dirname, "emails", "customer-enquiry"),
       template: path.join(__dirname, "emails"),
       message: { to, subject },
       locals: {
