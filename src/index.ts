@@ -85,7 +85,7 @@ app.post("/contact-us", async (req: Request, res: Response) => {
         options: { extension: "ejs" }, // Or 'hbs' for Handlebars
         // Use an absolute path to ensure correct resolution in production
         // root: path.resolve(__dirname, "emails"),
-        root: path.join(process.cwd(), "emails"), // for Vercel
+        root: path.join(__dirname, "emails"), // for Vercel
       },
       juice: true, // Enable CSS inlining (set to false if not needed)
       preview: true, // Enable browser previews in development
@@ -95,8 +95,7 @@ app.post("/contact-us", async (req: Request, res: Response) => {
     const info = await email.send({
       // template: "customer-enquiry",
       // template: path.join(__dirname, "emails", "customer-enquiry"),
-      // template: path.join(__dirname, "emails"),
-      template: path.join(process.cwd(), "emails"), // for Vercel
+      template: path.join(__dirname, "emails"),
       message: { to, subject },
       locals: {
         firstName,
