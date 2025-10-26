@@ -87,7 +87,8 @@ app.post("/contact-us", async (req: Request, res: Response) => {
 
     const info = await email.send({
       // template: "customer-enquiry",
-      template: path.join(__dirname, "emails", "customer-enquiry"),
+      // template: path.join(__dirname, "emails", "customer-enquiry"),
+      template: path.join(__dirname, "emails"),
       message: { to, subject },
       locals: {
         firstName,
