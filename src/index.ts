@@ -47,13 +47,17 @@ app.post("/contact-us", async (req: Request, res: Response) => {
   console.log(`countryCode: ${countryCode}`);
   console.log(`phoneNumber: ${phoneNumber}`);
 
-  console.log("__dirname:", __dirname);
   console.log("process.cwd():", process.cwd());
+
+  console.log("__dirname:", __dirname);
+
+  console.log("Exists emails:", fs.existsSync(path.join(__dirname, "emails")));
+  // console.log(
+  //   `emails/customer-enquiry: ${path.join(__dirname, "emails", "customer-enquiry")}`
+  // );
+
   console.log(
-    `emails/customer-enquiry: ${path.join(__dirname, "emails", "customer-enquiry")}`
-  );
-  console.log(
-    "Exists on prod:",
+    "Exists emails customer-enquiry:",
     fs.existsSync(path.join(__dirname, "emails", "customer-enquiry"))
   );
 
