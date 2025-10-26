@@ -52,6 +52,12 @@ app.post("/contact-us", async (req: Request, res: Response) => {
   console.log("__dirname:", __dirname);
 
   console.log("Exists emails:", fs.existsSync(path.join(__dirname, "emails")));
+
+  console.log(
+    "Exist email for Vercel",
+    fs.existsSync(path.join(process.cwd(), "emails"))
+  );
+
   // console.log(
   //   `emails/customer-enquiry: ${path.join(__dirname, "emails", "customer-enquiry")}`
   // );
