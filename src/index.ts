@@ -2,7 +2,6 @@ import express, { Request, Response } from "express";
 import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 import Email from "email-templates";
-import fs from "fs";
 import path from "path";
 
 const env = process.env.NODE_ENV || "development";
