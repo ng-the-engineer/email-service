@@ -26,6 +26,7 @@ app.get("/health", (req: Request, res: Response) => {
 });
 
 app.post("/contact-us", async (req: Request, res: Response) => {
+  console.log("res.body", req.body);
   const {
     from,
     subject,
