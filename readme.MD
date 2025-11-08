@@ -65,6 +65,6 @@ curl --location --request POST 'https://{{YOUR_DOMAIN}}/contact-us' \
     "subject": "Customer Enquiry",
     "message": "Hey there, I want to understand what minimum quantity to have free delivery? Thanks",
     "countryCode": "UK",
-    "phoneNumber": "07890123456"
+    "mobileNumber": "07890123456"
 }'
 ```
