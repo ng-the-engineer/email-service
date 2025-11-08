@@ -49,6 +49,10 @@ In Vercel project,
 - Output Directory: `dist`
 - Install Command: `npm install -g typescript && npm install && mkdir -p dist/emails/ && cp -r src/emails/ dist/`
 
+### CORS Setting
+
+To allow frontend app to consume this email service, assign the HTTP domain in the environment variable, ALLOWED_FRONTEND_ORIGIN.
+
 ### Testing
 
 ```
