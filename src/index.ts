@@ -37,6 +37,10 @@ app.post("/contact-us", async (req: Request, res: Response) => {
   } = req.body;
   const to = process.env.RECIPIENT;
 
+  res.header("Access-Control-Allow-Origin", "http://localhost:5173"); // OR "*"
+  res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+
   if (!from || !to || !firstName || !lastName || !subject || !message) {
     return res.status(400).json({
       error:
