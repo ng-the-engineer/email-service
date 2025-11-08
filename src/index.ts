@@ -5,6 +5,7 @@ import Email from "email-templates";
 import path from "path";
 
 const env = process.env.NODE_ENV || "development";
+const allowedFrontEndOrigin = process.env.ALLOWED_FRONTEND_ORIGIN;
 
 if (env === "development") {
   dotenv.config();
@@ -26,10 +27,7 @@ app.get("/health", (req: Request, res: Response) => {
 });
 
 app.use((req, res, next) => {
-  res.header(
-    "Access-Control-Allow-Origin",
-    "https://rawseed-engineer.github.io"
-  ); // Allow frontend origin
+  res.header("Access-Control-Allow-Origin", allowedFrontEndOrigin); // Allow frontend origin
   res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type");
 
