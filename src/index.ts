@@ -47,7 +47,7 @@ app.post("/contact-us", async (req: Request, res: Response) => {
     firstName,
     lastName,
     countryCode,
-    phoneNumber,
+    mobileNumber,
   } = req.body;
   const to = process.env.RECIPIENT;
 
@@ -81,7 +81,7 @@ app.post("/contact-us", async (req: Request, res: Response) => {
         firstName,
         lastName,
         countryCode: countryCode ?? "N/A",
-        phoneNumber: phoneNumber ?? "N/A",
+        mobileNumber: mobileNumber ?? "N/A",
         customerMessage: message,
       },
     });
