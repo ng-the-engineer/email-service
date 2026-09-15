@@ -14,12 +14,77 @@ if (env === "development") {
 const app = express();
 app.use(express.json());
 
+const microsoftOAuthProvision = (
+  _user: string,
+  _renew: boolean,
+  callback: (error: Error | null, accessToken: string, expires: number) => void,
+) => {
+  const body = new URLSearchParams({
+    client_id: process.env.SMTP_CLIENT_ID || "",
+    client_secret: process.env.SMTP_CLIENT_SECRET || "",
+    refresh_token: process.env.SMTP_REFRESH_TOKEN || "",
+    grant_type: "refresh_token",
+    scope: "https://outlook.office.com/SMTP.Send",
+  });
+
+  fetch(
+    `https://login.microsoftonline.com/${
+      process.env.MICROSOFT_TENANT_ID || "common"
+    }/oauth2/v2.0/token`,
+    {
+      method: "POST",
+      headers: { "content-type": "application/x-www-form-urlencoded" },
+      body,
+    },
+  )
+    .then(async (response) => {
+      const result = (await response.json()) as {
+        access_token?: string;
+        expires_in?: number;
+        error_description?: string;
+      };
+      if (!response.ok || !result.access_token) {
+        throw new Error(
+          result.error_description || "Microsoft OAuth token request failed",
+        );
+      }
+      callback(null, result.access_token, result.expires_in || 0);
+    })
+    .catch((error: unknown) => {
+      callback(
+        error instanceof Error ? error : new Error("Microsoft OAuth failed"),
+        "",
+        0,
+      );
+    });
+};
+
+const smtpAuth =
+  process.env.SMTP_AUTH_METHOD === "oauth2"
+    ? {
+        type: "OAuth2" as const,
+        user: process.env.SMTP_USER,
+        clientId: process.env.SMTP_CLIENT_ID,
+        clientSecret: process.env.SMTP_CLIENT_SECRET,
+        refreshToken: process.env.SMTP_REFRESH_TOKEN,
+        accessUrl: `https://login.microsoftonline.com/${
+          process.env.MICROSOFT_TENANT_ID || "common"
+        }/oauth2/v2.0/token`,
+        customParams: {
+          scope: "https://outlook.office.com/SMTP.Send",
+        },
+        provisionCallback: microsoftOAuthProvision,
+      }
+    : {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASSWORD,
+      };
+
 const transporter = nodemailer.createTransport({
-  service: process.env.PROVIDER,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASSWORD,
-  },
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT || 465),
+  secure: process.env.SMTP_SECURE !== "false",
+  auth: smtpAuth,
 });
 
 app.get("/health", (req: Request, res: Response) => {
@@ -39,7 +104,6 @@ app.use((req, res, next) => {
 });
 
 app.post("/contact-us", async (req: Request, res: Response) => {
-  console.log("res.body", req.body);
   const {
     from,
     subject,
@@ -61,7 +125,8 @@ app.post("/contact-us", async (req: Request, res: Response) => {
   try {
     const email = new Email({
       message: {
-        from,
+        from: process.env.SMTP_USER,
+        replyTo: from,
         subject,
       },
       transport: transporter,

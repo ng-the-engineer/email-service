@@ -49,6 +49,43 @@ In Vercel project,
 - Output Directory: `dist`
 - Install Command: `npm install -g typescript && npm install && mkdir -p dist/emails/ && cp -r src/emails/ dist/`
 
+#### Gmail SMTP settings
+
+The Vercel environment variables must be configured for the Production environment:
+
+- `PROVIDER`: `gmail`
+- `SMTP_USER`: the full Gmail or Google Workspace email address
+- `SMTP_PASSWORD`: a Google App Password for `SMTP_USER`, not the normal Google account password
+- `RECIPIENT`: the address that should receive contact messages
+
+To create an App Password, enable 2-Step Verification on the Google account, then create one under Google Account > Security > App passwords. Enter the generated 16-character value in Vercel without quotation marks. Redeploy after changing the variables.
+
+The message is sent from `SMTP_USER`; the visitor's address is set as `Reply-To`. This avoids Gmail rejecting or rewriting a message whose `From` address does not belong to the authenticated account.
+
+#### GoDaddy Microsoft 365 SMTP settings
+
+For a GoDaddy-hosted Microsoft 365 mailbox, configure the local `.env` or Vercel Production environment with:
+
+- `SMTP_HOST`: `smtp.office365.com`
+- `SMTP_PORT`: `587`
+- `SMTP_SECURE`: `false` (STARTTLS)
+- `SMTP_USER`: the complete GoDaddy mailbox address
+- `SMTP_AUTH_METHOD`: `oauth2`
+- `RECIPIENT`: the address that should receive contact messages
+
+Security Defaults blocks password-based SMTP AUTH. OAuth2 requires an app registration in Microsoft Entra ID with the **Microsoft Graph** delegated `SMTP.Send` permission and a refresh token for `SMTP_USER`. Add these values to the environment:
+
+- `MICROSOFT_TENANT_ID`: the tenant ID or verified tenant domain
+- `SMTP_CLIENT_ID`: the Entra app registration's Application (client) ID
+- `SMTP_CLIENT_SECRET`: the app secret value
+- `SMTP_REFRESH_TOKEN`: a refresh token obtained through the OAuth authorization-code or device-code flow
+
+The service uses the refresh token to obtain short-lived access tokens from the tenant token endpoint. Treat the client secret and refresh token as passwords; keep them in Vercel environment variables or another secret store, never in source control. Redeploy after changing variables.
+
+For the Microsoft OAuth setup, register an app in **Microsoft Entra admin center**, add **Microsoft Graph > Delegated permissions > SMTP.Send** (displayed as **Send emails from mailboxes using SMTP AUTH**), request the `https://outlook.office.com/SMTP.Send` and `offline_access` scopes during authorization, and grant consent as required by the tenant. The `SMTP.Send` permission ID is `258f6531-6087-4cc4-bb90-092c5fb3ed3f`. The mailbox must also be permitted to use SMTP AUTH with OAuth. Microsoft documents the token and XOAUTH2 flow here: https://learn.microsoft.com/en-us/exchange/client-developer/legacy-protocols/how-to-authenticate-an-imap-pop-smtp-application-by-using-oauth
+
+For legacy GoDaddy Essential Email (not Microsoft 365), keep `SMTP_AUTH_METHOD="password"` and use `smtpout.secureserver.net` with the mailbox password instead.
+
 ### CORS Setting
 
 To allow frontend app to consume this email service, assign the HTTP domain in the environment variable, ALLOWED_FRONTEND_ORIGIN.
