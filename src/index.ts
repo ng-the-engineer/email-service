@@ -136,7 +136,7 @@ app.post("/contact-us", async (req: Request, res: Response) => {
       },
       juice: true, // Enable CSS inlining (set to false if not needed)
       preview: true, // Enable browser previews in development
-      send: true, // Set to false in development to avoid accidental sends; true for production
+      send: false, // Set to false in development to avoid accidental sends; true for production
     });
 
     const info = await email.send({
@@ -147,6 +147,7 @@ app.post("/contact-us", async (req: Request, res: Response) => {
         lastName,
         countryCode: countryCode ?? "N/A",
         mobileNumber: mobileNumber ?? "N/A",
+        from,
         customerMessage: message,
       },
     });
